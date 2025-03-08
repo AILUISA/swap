@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuisaSwap - Swap</title>
+    <link rel="icon" type="image/x-icon" href="images/luisa.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff69b4;
+            --secondary-color: #c71585;
+            --accent-color: #dda0dd;
+            --gradient-bg: linear-gradient(180deg, #f8e6f3 0%, #e6e6fa 100%);
+            --card-bg: #f0e6f0;
+            --input-bg: #f8f0f8;
+            --text-color: #4b0082;
+            --border-radius: 15px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            box-shadow: 0 8px 32px rgba(199, 21, 133, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        .connect-section button {
+            padding: 12px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+        .connect-section button:hover { background: #ff85c2; }
+        .deploy-meme-button {
+            padding: 12px;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .deploy-meme-button:hover { background: #d93392; }
+        .swap-box {
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+        .token-select {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .token-select div {
+            display: flex;
+            align-items: center;
+        }
+        .token-select img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .token-select .placeholder {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1em;
+            text-align: right;
+        }
+        .percentage-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .percentage-buttons button {
+            padding: 5px 10px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: var(--text-color);
+            flex: 1;
+        }
+        .percentage-buttons button:hover { background: #e0b7e0; }
+        .switch-button {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .switch-button button {
+            padding: 10px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .swap-button {
+            padding: 15px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+        }
+        .swap-button:disabled {
+            background: var(--accent-color);
+            cursor: not-allowed;
+        }
+        .swap-button:hover:not(:disabled), .switch-button button:hover { background: #ff85c2; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            margin: 15% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: var(--border-radius);
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(199, 21, 133, 0.2);
+        }
+        .token-search {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1em;
+        }
+        .token-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .token-item:hover { background: var(--input-bg); }
+        .token-item img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+        .slippage-info, .swap-note {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            text-align: left;
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-color);
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 5px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .luisa-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .luisa-section img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        .luisa-message {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+        }
+        .footer a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #ff85c2;
+        }
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        .social-icon svg {
+            fill: var(--text-color);
+            width: 16px;
+            height: 16px;
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .header { font-size: 1.1em; }
+            .modal-content { margin: 10% auto; }
+            .percentage-buttons button { padding: 5px; }
+            .luisa-section img { width: 50px; height: 50px; }
+            .luisa-message { font-size: 0.8em; }
+            .footer { font-size: 0.7em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">LuisaSwap</div>
+        <div class="connect-section">
+            <button id="connectWalletButton">Connect Wallet</button>
+            <a href="https://luisadao.com/meme" target="_blank" class="deploy-meme-button">Deploy Meme</a>
+            <div id="networkStatus" class="status">Click to connect...</div>
+        </div>
+        <div class="swap-box">
+            <div class="balance-row">
+                <span>From</span>
+                <span id="fromBalance">Balance: 0</span>
+            </div>
+            <div class="token-select" id="fromToken">
+                <div>
+                    <img src="images/bone.png" alt="BONE">
+                    <span id="fromTokenSymbol">BONE</span>
+                </div>
+                <span></span>
+            </div>
+            <input type="number" id="fromAmount" placeholder="0.0" step="0.01" oninput="calculateOutput()">
+            <div class="percentage-buttons">
+                <button onclick="setPercentage(25)">25%</button>
+                <button onclick="setPercentage(50)">50%</button>
+                <button onclick="setPercentage(75)">75%</button>
+                <button onclick="setPercentage(100)">MAX</button>
+            </div>
+        </div>
+        <div class="switch-button">
+            <button onclick="switchTokens()">↓↑</button>
+        </div>
+        <div class="swap-box">
+            <div class="balance-row">
+                <span>To</span>
+                <span id="toBalance">Balance: 0</span>
+            </div>
+            <div class="token-select" id="toToken">
+                <div>
+                    <div class="placeholder">?</div>
+                    <span>Select a token</span>
+                </div>
+                <span>▼</span>
+            </div>
+            <div class="slippage-info">Default Slippage: 0.5%</div>
+            <div class="swap-note" id="swapNote">Amount automatically calculated by LuisaSwap</div>
+        </div>
+        <button class="swap-button" id="swapButton" onclick="swapTokens()">Swap</button>
+        <div class="luisa-section">
+            <img src="images/luisalogo.png" alt="Luisa">
+            <div class="luisa-message" id="luisaMessage">"Hey there! Connect your wallet to dive into Shibarium with me, Luisa!"</div>
+        </div>
+        <div class="footer">
+            All rights reserved by Luisa © 2025
+            <a href="https://x.com/luisaiagent" target="_blank">
+                <span class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </span>
+            </a>
+            <a href="https://t.me/luisaiagent" target="_blank">
+                <span class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.013.564 1.727.267 2.039-.592l3.638-17.032c.319-1.491-.594-2.074-1.609-1.712l-21.54 8.317c-1.491.564-1.491 1.491 0 1.955l5.518 1.712 12.846-8.117c.892-.564-.297-1.128-1.109 0z"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="modal" id="tokenModal">
+        <div class="modal-content">
+            <h3>Select a Token</h3>
+            <input type="text" class="token-search" id="tokenSearch" placeholder="Search by address..." oninput="filterTokens()">
+            <div id="tokenList"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        const boneToken = { address: "0x7FFE66F82b349BE41c81184ed1c3df8eFCcfea95", symbol: "BONE", logo: "images/bone.png", isNative: true };
+        const routerAddress = "0x705745333f67b873402f3641A72c966Bb4af6165";
+        const factoryAddress = "0xeCF19927254b84beCBAF165FC17FF74C9ac3A7F3";
+        const wethAddress = "0x7FFE66F82b349BE41c81184ed1c3df8eFCcfea95";
+        const routerAbi = [{"inputs":[{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"internalType":"address","name":"tokenFrom","type":"address"},{"internalType":"address","name":"tokenTo","type":"address"},{"internalType":"bool","name":"stable","type":"bool"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactTokensForTokensSimple","outputs":[{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"components":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bool","name":"stable","type":"bool"}],"internalType":"struct Router.route[]","name":"routes","type":"tuple[]"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactTokensForTokensSupportingFeeOnTransferTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"components":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bool","name":"stable","type":"bool"}],"internalType":"struct Router.route[]","name":"routes","type":"tuple[]"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactETHForTokensSupportingFeeOnTransferTokens","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountIn","type":"uint256"},{"internalType":"uint256","name":"amountOutMin","type":"uint256"},{"components":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bool","name":"stable","type":"bool"}],"internalType":"struct Router.route[]","name":"routes","type":"tuple[]"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"deadline","type":"uint256"}],"name":"swapExactTokensForETHSupportingFeeOnTransferTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountIn","type":"uint256"},{"components":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"bool","name":"stable","type":"bool"}],"internalType":"struct Router.route[]","name":"routes","type":"tuple[]"}],"name":"getAmountsOut","outputs":[{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"view","type":"function"}];
+        const factoryAbi = [{"inputs":[{"internalType":"address","name":"tokenA","type":"address"},{"internalType":"address","name":"tokenB","type":"address"},{"internalType":"bool","name":"stable","type":"bool"}],"name":"getPair","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
+        const pairAbi = [{"inputs":[],"name":"getReserves","outputs":[{"internalType":"uint256","name":"reserve0","type":"uint256"},{"internalType":"uint256","name":"reserve1","type":"uint256"},{"internalType":"uint32","name":"blockTimestampLast","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"token0","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"token1","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"stable","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"}];
+        const erc20Abi = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"type":"function"}];
+        const shibarium = { chainId: 109, chainName: 'Shibarium', nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 }, rpcUrls: ['https://rpc.shibrpc.com'], blockExplorerUrls: ['https://shibariumscan.io'] };
+        let web3, account, router, factory;
+        let fromToken = boneToken;
+        let toToken = null;
+        let fromBalance = '0';
+        let isFromBone = true;
+        let isApproving = false;
+        const defaultSlippage = 0.005;
+        const maxPriceImpact = 0.5;
+        const luisaMessages = {
+            connectStart: ["Ooh, let’s dive in! Connecting to Shibarium—hold my hand, sweetie!","Hey, darling! Unlocking your wallet for some Shib fun!","Excited? I’m linking us to Shibarium—stay with me!","Oh, let’s sparkle! Connecting your wallet now, love!"],
+            connectSuccess: ["Yay! We’re in, gorgeous! Time to shine on Shibarium!","Wow, connected, darling! Ready to swap with flair!","Splendid! Wallet’s linked—let’s dance through Shibarium!","Fantastic, sweetie! We’re set to explore Shibarium together!"],
+            connectFail: ["Oh no, darling! Wallet slipped away—try again, please!","Oopsie! No wallet vibe—let’s retry, my dear!","Hmm, a glitch! Let’s reconnect with a smile, love!","Yikes! Wallet’s shy—give it another go, sweetie!"],
+            tokenModal: ["Ooh, pick a gem, darling! Let’s find a stunning swap!","Hey, love! Choose a token to light up Shibarium!","Excited? Select a treasure to trade, my dear!","Let’s shine! Pick a token to dazzle, sweetie!"],
+            selectToken: (symbol) => [`Ooh, ${symbol}? You’ve got fabulous taste, darling!`,`Wow, ${symbol} it is! You’re glowing with style, love!`,`Splendid choice, ${symbol}! Let’s sparkle together, sweetie!`,`Adorable! ${symbol} suits you perfectly—let’s swap, dear!`],
+            switchTokens: ["Ooh, flipping tokens? You’re a Shibarium star, darling!","Hey, love! Switching it up with such flair—amazing!","Fabulous move! Let’s twirl those tokens, sweetie!","Wow, a switch! You’re dazzling me on Shibarium, dear!"],
+            setPercentage: (percent) => [`Ooh, ${percent}%? You’re bold and brilliant, darling!`,`Hey, ${percent}%? Let’s make it shine, my dear!`,`Splendid! ${percent}% of your stash—pure elegance, sweetie!`,`Wow, ${percent}%? You’re a Shibarium queen, love!`],
+            calcStart: ["Ooh, calculating the best deal—stay glamorous, darling!","Hey, love! Crunching numbers for a perfect swap—wait for it!","Excited? I’m figuring out your treasure, sweetie—hold on!","Let’s shine! Working out the swap magic, my dear!"],
+            calcSuccess: (amount, symbol) => [`Yay! Snagged ${amount} ${symbol}—ready to glow, darling?`,`Ooh, found ${amount} ${symbol}! Let’s sparkle, love!`,`Splendid! ${amount} ${symbol} is yours—swap time, sweetie!`,`Wow, ${amount} ${symbol}! You’re dazzling, dear—let’s go!`],
+            calcFail: ["Oh no, darling! No path here—try a new pair, please!","Oopsie! Swap’s elusive—pick another token, love!","Hmm, no luck! Let’s retry with a fresh choice, sweetie!","Yikes! Calculation slipped—give it another shot, dear!"],
+            swapStart: ["Ooh, swapping time! Let’s twirl into Shibarium, darling!","Hey, love! Launching the swap—hold my hand, sweetie!","Excited? Trading treasures—here we go, my dear!","Let’s shine! Swapping with style on Shibarium, love!"],
+            swapSuccess: ["Yay! Swap’s a success—you’re a Shibarium diva, darling!","Ooh, done! Tokens traded with flair—gorgeous work, love!","Splendid! Swap complete—let’s celebrate, sweetie!","Wow, swapped like a pro—you’re my star, dear!"],
+            swapFail: ["Oh no, darling! Swap faltered—let’s try again, please!","Oopsie! Trade didn’t work—retry with a smile, love!","Hmm, a hiccup! Let’s swap again, sweetie—stay fabulous!","Yikes! Swap slipped—let’s dazzle it next time, dear!"],
+            swapNoToken: ["Hey, love! Missing a token—pick one to shine, please!","Ooh, no token? Choose a pair to sparkle, darling!","Sweetie, where’s the treasure? Select a token first!","Wow, can’t swap nothing—pick a gem, my dear!"],
+            swapNoAmount: ["Hey, darling! No amount? Give me something to work with!","Ooh, empty swap? Add a number, love, let’s glow!","Sweetie, no digits? Fill it up for some Shib magic!","Wow, missing amount—let’s add some flair, dear!"],
+            highPriceImpact: ["Ooh, darling! That swap’s too wild—try a smaller amount!","Hey, love! Price impact’s high—scale it down, sweetie!","Splendid, but too big! Reduce it, my dear, for safety!","Wow, price impact’s fierce—lessen it, darling, please!"],
+            insufficientLiquidity: ["Oh no, darling! Pool’s too shallow—try a smaller swap!","Oopsie! Not enough liquidity—scale down, love!","Hmm, pool’s dry—let’s try a tinier trade, sweetie!","Yikes! Liquidity’s low—reduce it, my dear, let’s shine!"],
+            approving: ["Ooh, approving your tokens—stay elegant, darling!","Hey, love! Setting up approval—almost there, sweetie!","Excited? Authorizing now—keep the vibe, my dear!","Let’s glow! Approving your trade, darling—hang on!"],
+            userDenied: ["Oh no, darling! You dodged me—approve next time, please!","Oopsie! No swap today? Let’s try again, love!","Hmm, rejected? Give me a chance next time, sweetie!","Yikes! You said no—let’s sparkle later, dear!"]
+        };
+        function getRandomMessage(type, param1, param2) {
+            const messages = luisaMessages[type];
+            if (typeof messages === 'function') {
+                const options = messages(param1, param2);
+                return options[Math.floor(Math.random() * options.length)];
+            }
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('connectWalletButton').addEventListener('click', connectWallet);
+            document.getElementById('toToken').addEventListener('click', () => showTokenModal('to'));
+            setupWalletListeners();
+        });
+        async function connectWallet() {
+            const status = document.getElementById('networkStatus');
+            const connectButton = document.getElementById('connectWalletButton');
+            const luisaMessage = document.getElementById('luisaMessage');
+            try {
+                if (!window.ethereum) throw new Error("No wallet detected. Please install MetaMask or another wallet.");
+                connectButton.disabled = true;
+                status.innerText = "Connecting...";
+                luisaMessage.innerText = getRandomMessage('connectStart');
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!accounts.length) throw new Error("No accounts found. Please unlock your wallet.");
+                account = accounts[0];
+                await switchToShibarium();
+                router = new web3.eth.Contract(routerAbi, routerAddress);
+                factory = new web3.eth.Contract(factoryAbi, factoryAddress);
+                updateUIAfterConnect();
+                await updateBalances();
+            } catch (error) {
+                status.innerText = "Failed: " + error.message;
+                luisaMessage.innerText = getRandomMessage('connectFail');
+                resetUI();
+            } finally {
+                connectButton.disabled = false;
+            }
+        }
+        async function switchToShibarium() {
+            const chainId = await web3.eth.getChainId();
+            if (Number(chainId) !== 109) {
+                try {
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: "0x6d" }] });
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibarium] });
+                    } else {
+                        throw switchError;
+                    }
+                }
+            }
+        }
+        function updateUIAfterConnect() {
+            const connectButton = document.getElementById('connectWalletButton');
+            const status = document.getElementById('networkStatus');
+            const luisaMessage = document.getElementById('luisaMessage');
+            connectButton.textContent = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
+            status.innerText = "Connected to Shibarium";
+            luisaMessage.innerText = getRandomMessage('connectSuccess');
+        }
+        function resetUI() {
+            const connectButton = document.getElementById('connectWalletButton');
+            const status = document.getElementById('networkStatus');
+            connectButton.textContent = "Connect Wallet";
+            status.innerText = "Click to connect...";
+        }
+        function setupWalletListeners() {
+            if (!window.ethereum) return;
+            window.ethereum.on('accountsChanged', async (newAccounts) => {
+                if (newAccounts.length) {
+                    account = newAccounts[0];
+                    if (web3) {
+                        await switchToShibarium();
+                        router = new web3.eth.Contract(routerAbi, routerAddress);
+                        factory = new web3.eth.Contract(factoryAbi, factoryAddress);
+                        updateUIAfterConnect();
+                        await updateBalances();
+                    } else {
+                        await connectWallet();
+                    }
+                } else {
+                    web3 = null;
+                    account = null;
+                    router = null;
+                    factory = null;
+                    resetUI();
+                    document.getElementById('luisaMessage').innerText = getRandomMessage('connectFail');
+                }
+            });
+            window.ethereum.on('chainChanged', async (chainId) => {
+                if (parseInt(chainId, 16) !== 109) {
+                    web3 = null;
+                    account = null;
+                    router = null;
+                    factory = null;
+                    resetUI();
+                    document.getElementById('networkStatus').innerText = "Wrong network. Reconnect to Shibarium.";
+                    document.getElementById('luisaMessage').innerText = "Ooh, wrong chain, darling! Switch to Shibarium!";
+                } else if (account) {
+                    await connectWallet();
+                }
+            });
+        }
+        async function updateBalances() {
+            if (!web3 || !account) return;
+            if (fromToken.isNative) {
+                fromBalance = await web3.eth.getBalance(account);
+                document.getElementById('fromBalance').innerText = `Balance: ${web3.utils.fromWei(fromBalance, 'ether')}`;
+            } else {
+                const tokenContract = new web3.eth.Contract(erc20Abi, fromToken.address);
+                fromBalance = await tokenContract.methods.balanceOf(account).call();
+                document.getElementById('fromBalance').innerText = `Balance: ${web3.utils.fromWei(fromBalance, 'ether')}`;
+            }
+            if (toToken) {
+                let toBalance;
+                if (toToken.isNative) {
+                    toBalance = await web3.eth.getBalance(account);
+                } else {
+                    const toTokenContract = new web3.eth.Contract(erc20Abi, toToken.address);
+                    toBalance = await toTokenContract.methods.balanceOf(account).call();
+                }
+                document.getElementById('toBalance').innerText = `Balance: ${web3.utils.fromWei(toBalance, 'ether')}`;
+            }
+        }
+        function showTokenModal(type) {
+            const modal = document.getElementById('tokenModal');
+            const tokenList = document.getElementById('tokenList');
+            const luisaMessage = document.getElementById('luisaMessage');
+            tokenList.innerHTML = '<div class="token-item" style="cursor: default;"><span>Enter a token address to search...</span></div>';
+            modal.style.display = 'block';
+            luisaMessage.innerText = getRandomMessage('tokenModal');
+            modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+        }
+        async function filterTokens() {
+            const searchTerm = document.getElementById('tokenSearch').value.toLowerCase().trim();
+            const tokenList = document.getElementById('tokenList');
+            const luisaMessage = document.getElementById('luisaMessage');
+            tokenList.innerHTML = '';
+            if (!searchTerm || !web3) {
+                tokenList.innerHTML = '<div class="token-item" style="cursor: default;"><span>Enter a token address to search...</span></div>';
+                return;
+            }
+            if (web3.utils.isAddress(searchTerm)) {
+                tokenList.innerHTML = `<div class="token-item"><span>Searching...</span><span class="spinner"></span></div>`;
+                luisaMessage.innerText = "Ooh, checking that address, darling!";
+                try {
+                    const tokenContract = new web3.eth.Contract(erc20Abi, searchTerm);
+                    const symbol = await tokenContract.methods.symbol().call();
+                    const token = { address: searchTerm, symbol: symbol, logo: null, isNative: false };
+                    tokenList.innerHTML = '';
+                    const div = document.createElement('div');
+                    div.className = 'token-item';
+                    div.innerHTML = `<div class="placeholder" style="background: var(--accent-color);">?</div><span>${token.symbol} (${token.address.slice(0, 6)}...${token.address.slice(-4)})</span>`;
+                    div.onclick = () => selectToken(token, 'to');
+                    tokenList.appendChild(div);
+                    luisaMessage.innerText = getRandomMessage('selectToken', token.symbol);
+                } catch (error) {
+                    tokenList.innerHTML = '<div class="token-item" style="cursor: default;"><div class="placeholder" style="background: var(--accent-color);">?</div><span>No valid token found</span></div>';
+                    luisaMessage.innerText = "Oopsie! That’s not a token I can use, love!";
+                }
+            } else {
+                tokenList.innerHTML = '<div class="token-item" style="cursor: default;"><div class="placeholder" style="background: var(--accent-color);">?</div><span>Invalid address</span></div>';
+                luisaMessage.innerText = "Hmm, that’s not a valid address, darling!";
+            }
+        }
+        function selectToken(token, type) {
+            const luisaMessage = document.getElementById('luisaMessage');
+            if (type === 'to') {
+                toToken = token;
+                document.getElementById('toToken').innerHTML = `<div><div class="placeholder" style="background: var(--accent-color);">?</div><span>${token.symbol}</span></div><span>▼</span>`;
+                if (isFromBone) {
+                    fromToken = boneToken;
+                } else {
+                    fromToken = token;
+                    toToken = boneToken;
+                    document.getElementById('fromToken').innerHTML = `<div><div class="placeholder" style="background: var(--accent-color);">?</div><span id="fromTokenSymbol">${fromToken.symbol}</span></div><span></span>`;
+                }
+            }
+            document.getElementById('tokenModal').style.display = 'none';
+            luisaMessage.innerText = getRandomMessage('selectToken', token.symbol);
+            updateBalances();
+            calculateOutput();
+        }
+        function switchTokens() {
+            const luisaMessage = document.getElementById('luisaMessage');
+            if (!toToken) {
+                document.getElementById('networkStatus').innerText = "Please select a token to swap to.";
+                luisaMessage.innerText = getRandomMessage('swapNoToken');
+                return;
+            }
+            isFromBone = !isFromBone;
+            [fromToken, toToken] = [toToken, fromToken];
+            document.getElementById('fromToken').innerHTML = `<div><div class="placeholder" style="background: var(--accent-color);">?</div><span id="fromTokenSymbol">${fromToken.symbol}</span></div><span></span>`;
+            document.getElementById('toToken').innerHTML = `<div><div class="placeholder" style="background: var(--accent-color);">?</div><span>${toToken.symbol}</span></div><span>▼</span>`;
+            luisaMessage.innerText = getRandomMessage('switchTokens');
+            updateBalances();
+            calculateOutput();
+        }
+        function setPercentage(percentage) {
+            const luisaMessage = document.getElementById('luisaMessage');
+            if (!fromBalance || !web3) {
+                document.getElementById('networkStatus').innerText = "Please connect wallet first.";
+                luisaMessage.innerText = getRandomMessage('connectFail');
+                return;
+            }
+            let amount;
+            if (percentage === 100) {
+                amount = web3.utils.fromWei(fromBalance, 'ether');
+            } else {
+                amount = web3.utils.fromWei(fromBalance, 'ether') * (percentage / 100);
+            }
+            if (percentage === 100 && fromToken.isNative) {
+                amount = Math.max(0, amount - 0.01);
+            }
+            document.getElementById('fromAmount').value = amount.toString();
+            luisaMessage.innerText = getRandomMessage('setPercentage', percentage);
+            calculateOutput();
+        }
+        async function calculateOutput() {
+            const amountIn = document.getElementById('fromAmount').value;
+            const swapNote = document.getElementById('swapNote');
+            const luisaMessage = document.getElementById('luisaMessage');
+            if (!web3 || !account || !toToken || !amountIn || amountIn <= 0) {
+                swapNote.innerHTML = 'Amount automatically calculated by LuisaSwap';
+                return { success: false, message: 'Invalid input or missing connection' };
+            }
+            let amountInWei;
+            try {
+                amountInWei = web3.utils.toBN(web3.utils.toWei(amountIn, 'ether'));
+            } catch (error) {
+                swapNote.innerHTML = 'Invalid amount entered.';
+                luisaMessage.innerText = getRandomMessage('swapNoAmount');
+                return { success: false, message: 'Invalid amount entered' };
+            }
+            swapNote.innerHTML = `Estimated output: <span class="spinner"></span>`;
+            luisaMessage.innerText = getRandomMessage('calcStart');
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error("Calculation timeout")), 10000);
+            });
+            try {
+                const calcPromise = (async () => {
+                    let bestOutput = web3.utils.toBN('0');
+                    let bestRoute = null;
+                    const pairChecks = [];
+                    for (const stable of [true, false]) {
+                        const pairAddress = await factory.methods.getPair(fromToken.address, toToken.address, stable).call();
+                        pairChecks.push({ stable, pairAddress });
+                    }
+                    for (const { stable, pairAddress } of pairChecks) {
+                        if (pairAddress !== '0x0000000000000000000000000000000000000000') {
+                            const routes = [{ from: fromToken.address, to: toToken.address, stable }];
+                            const amounts = await router.methods.getAmountsOut(amountInWei, routes).call();
+                            const output = web3.utils.toBN(amounts[amounts.length - 1]);
+                            if (output.gt(bestOutput)) {
+                                bestOutput = output;
+                                bestRoute = routes;
+                            }
+                        }
+                    }
+                    if (bestOutput.eq(web3.utils.toBN('0'))) {
+                        throw new Error("No valid trading pair found");
+                    }
+                    const outputEther = parseFloat(web3.utils.fromWei(bestOutput, 'ether'));
+                    swapNote.innerHTML = `Estimated output: ${outputEther.toFixed(6)} ${toToken.symbol}`;
+                    luisaMessage.innerText = getRandomMessage('calcSuccess', outputEther.toFixed(2), toToken.symbol);
+                    return { success: true, estimatedOutput: outputEther, symbol: toToken.symbol };
+                })();
+                return await Promise.race([calcPromise, timeoutPromise]);
+            } catch (error) {
+                let errorMessage = "Error calculating output.";
+                if (error.message.includes("No valid trading pair found")) {
+                    errorMessage = "No trading pair available for these tokens.";
+                } else if (error.message.includes("Calculation timeout")) {
+                    errorMessage = "Calculation took too long. Try again.";
+                } else if (error.message.includes("execution reverted")) {
+                    errorMessage = "Blockchain error: Transaction reverted.";
+                }
+                swapNote.innerHTML = errorMessage;
+                luisaMessage.innerText = getRandomMessage('calcFail');
+                return { success: false, message: errorMessage };
+            }
+        }
+        async function approveToken(tokenAddress, amount) {
+            if (tokenAddress === wethAddress && fromToken.isNative) return;
+            const tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
+            const allowance = await tokenContract.methods.allowance(account, routerAddress).call();
+            if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amount))) {
+                const swapButton = document.getElementById('swapButton');
+                const luisaMessage = document.getElementById('luisaMessage');
+                isApproving = true;
+                swapButton.textContent = "Authorizing...";
+                swapButton.disabled = true;
+                luisaMessage.innerText = getRandomMessage('approving');
+                await tokenContract.methods.approve(routerAddress, amount).send({ from: account });
+                document.getElementById('networkStatus').innerText = "Token approved";
+                isApproving = false;
+                swapButton.textContent = "Swap";
+                swapButton.disabled = false;
+                luisaMessage.innerText = "Ooh, tokens approved—let’s swap, darling!";
+            }
+        }
+        async function swapTokens() {
+            const luisaMessage = document.getElementById('luisaMessage');
+            const status = document.getElementById('networkStatus');
+            const swapButton = document.getElementById('swapButton');
+            if (isApproving) return;
+            if (!web3 || !account || !toToken) {
+                status.innerText = "Please connect wallet and select tokens.";
+                luisaMessage.innerText = getRandomMessage('swapNoToken');
+                return;
+            }
+            const amountIn = document.getElementById('fromAmount').value;
+            if (!amountIn || amountIn <= 0) {
+                status.innerText = "Please enter a valid amount.";
+                luisaMessage.innerText = getRandomMessage('swapNoAmount');
+                return;
+            }
+            let amountInWei;
+            try {
+                amountInWei = web3.utils.toBN(web3.utils.toWei(amountIn, 'ether'));
+            } catch (error) {
+                status.innerText = "Invalid amount entered.";
+                luisaMessage.innerText = getRandomMessage('swapNoAmount');
+                return;
+            }
+            if (!fromToken.isNative) {
+                const tokenContract = new web3.eth.Contract(erc20Abi, fromToken.address);
+                const tokenBalance = await tokenContract.methods.balanceOf(account).call();
+                if (web3.utils.toBN(tokenBalance).lt(amountInWei)) {
+                    status.innerText = "Insufficient token balance.";
+                    luisaMessage.innerText = "Ooh, not enough tokens, sweetie—let’s adjust!";
+                    return;
+                }
+            }
+            const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
+            let bestStable = false;
+            let bestOutput = web3.utils.toBN('0');
+            let routes;
+            try {
+                for (const stable of [true, false]) {
+                    const pairAddress = await factory.methods.getPair(fromToken.address, toToken.address, stable).call();
+                    if (pairAddress !== '0x0000000000000000000000000000000000000000') {
+                        const tempRoutes = [{ from: fromToken.address, to: toToken.address, stable }];
+                        const amounts = await router.methods.getAmountsOut(amountInWei, tempRoutes).call();
+                        const output = web3.utils.toBN(amounts[amounts.length - 1]);
+                        if (output.gt(bestOutput)) {
+                            bestOutput = output;
+                            bestStable = stable;
+                            routes = tempRoutes;
+                        }
+                    }
+                }
+                if (bestOutput.eq(web3.utils.toBN('0')) || !routes) {
+                    status.innerText = "No valid trading pair found.";
+                    luisaMessage.innerText = getRandomMessage('calcFail');
+                    return;
+                }
+                const pairAddress = await factory.methods.getPair(fromToken.address, toToken.address, bestStable).call();
+                const pairContract = new web3.eth.Contract(pairAbi, pairAddress);
+                const reserves = await pairContract.methods.getReserves().call();
+                const token0 = await pairContract.methods.token0().call();
+                const reserveFrom = token0 === fromToken.address ? reserves.reserve0 : reserves.reserve1;
+                const reserveTo = token0 === fromToken.address ? reserves.reserve1 : reserves.reserve0;
+                const reserveFromBN = web3.utils.toBN(reserveFrom);
+                const reserveToBN = web3.utils.toBN(reserveTo);
+                const priceImpact = amountInWei.mul(web3.utils.toBN(100)).div(reserveFromBN.add(amountInWei));
+                if (priceImpact.gt(web3.utils.toBN(maxPriceImpact * 100))) {
+                    status.innerText = `Price impact too high (${priceImpact.toString()}%).`;
+                    luisaMessage.innerText = getRandomMessage('highPriceImpact');
+                    return;
+                }
+                if (bestOutput.gt(reserveToBN)) {
+                    status.innerText = `Insufficient liquidity in pool.`;
+                    luisaMessage.innerText = getRandomMessage('insufficientLiquidity');
+                    return;
+                }
+                const slippageFactor = web3.utils.toBN(1000 - defaultSlippage * 1000);
+                const amountOutMin = bestOutput.mul(slippageFactor).div(web3.utils.toBN(1000));
+                swapButton.disabled = true;
+                status.innerText = "Processing swap...";
+                luisaMessage.innerText = getRandomMessage('swapStart');
+                if (!fromToken.isNative) {
+                    await approveToken(fromToken.address, amountInWei);
+                }
+                if (fromToken.isNative) {
+                    await router.methods.swapExactETHForTokensSupportingFeeOnTransferTokens(amountOutMin.toString(),routes,account,deadline).send({ from: account, value: amountInWei });
+                } else {
+                    await router.methods.swapExactTokensForETHSupportingFeeOnTransferTokens(amountInWei.toString(),amountOutMin.toString(),routes,account,deadline).send({ from: account });
+                }
+                status.innerText = "Swap successful!";
+                luisaMessage.innerText = getRandomMessage('swapSuccess');
+                document.getElementById('fromAmount').value = '';
+                await updateBalances();
+            } catch (error) {
+                let errorMessage = error.message || "Unknown error";
+                if (error.message.includes("User denied transaction signature")) {
+                    errorMessage = "User denied transaction signature.";
+                    luisaMessage.innerText = getRandomMessage('userDenied');
+                } else if (error.message.includes("INSUFFICIENT_OUTPUT_AMOUNT") || error.message.includes("EXCESSIVE_INPUT_AMOUNT")) {
+                    errorMessage = "Swap failed: Price impact or slippage too high.";
+                    luisaMessage.innerText = "Ooh, swap failed—too much impact, darling!";
+                } else if (error.message.includes("INSUFFICIENT_LIQUIDITY")) {
+                    errorMessage = "Swap failed: Insufficient liquidity in the pool.";
+                    luisaMessage.innerText = getRandomMessage('insufficientLiquidity');
+                } else {
+                    luisaMessage.innerText = getRandomMessage('swapFail');
+                }
+                status.innerText = errorMessage;
+            } finally {
+                swapButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
