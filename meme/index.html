@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuisaSwap - Deploy Meme Coins</title>
+    <link rel="icon" type="image/x-icon" href="/meme/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff69b4;
+            --secondary-color: #c71585;
+            --accent-color: #dda0dd;
+            --gradient-bg: linear-gradient(180deg, #f8e6f3 0%, #e6e6fa 100%);
+            --card-bg: #f0e6f0;
+            --input-bg: #f8f0f8;
+            --text-color: #4b0082;
+            --border-radius: 15px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-color);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            box-shadow: 0 8px 32px rgba(199, 21, 133, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            position: relative;
+        }
+        .header {
+            background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        .connect-section button {
+            padding: 12px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+        .connect-section button:hover { background: #ff85c2; }
+        .connect-section button:disabled {
+            background: var(--accent-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .luisadao-button {
+            padding: 12px;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .luisadao-button:hover { background: #d93392; }
+        .action-box {
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .action-row span {
+            font-size: 1em;
+            font-weight: 600;
+        }
+        .action-row button {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .action-row button:hover { background: #ff85c2; }
+        .action-row button:disabled {
+            background: var(--accent-color);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+        .input-group input {
+            padding: 8px;
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            background: #fff;
+            color: var(--text-color);
+        }
+        .info-box {
+            background: var(--input-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .info-row span {
+            color: var(--secondary-color);
+        }
+        .address-container {
+            display: flex;
+            align-items: center;
+        }
+        .short-address {
+            font-family: monospace;
+            color: var(--text-color);
+        }
+        .copy-button {
+            margin-left: 8px;
+            padding: 4px 8px;
+            background: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .copy-button:hover { background: #e0b7e0; }
+        .status {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+        .luisa-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .luisa-section img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        .luisa-message {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+        }
+        .footer a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #ff85c2;
+        }
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        .social-icon svg {
+            fill: var(--text-color);
+            width: 16px;
+            height: 16px;
+        }
+        .hint {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+            text-align: center;
+            font-style: italic;
+        }
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .header { font-size: 1.1em; }
+            .action-row button { padding: 6px 12px; }
+            .luisa-section img { width: 50px; height: 50px; }
+            .luisa-message { font-size: 0.8em; }
+            .footer { font-size: 0.7em; }
+            .hint { font-size: 0.7em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">LuisaSwap - Deploy Meme Coins</div>
+        <div class="connect-section">
+            <button id="connectWalletButton">Connect Wallet</button>
+            <a href="https://luisadao.com/" target="_blank" class="luisadao-button">LuisaSwap</a>
+            <div id="networkStatus" class="status">Click to connect...</div>
+        </div>
+        <div class="action-box">
+            <div class="input-group">
+                <label for="lowName">Low Meme Coin Name (1,000 BONE) *</label>
+                <input type="text" id="lowName" placeholder="Enter token name" required>
+            </div>
+            <div class="input-group">
+                <label for="lowSymbol">Low Meme Coin Symbol *</label>
+                <input type="text" id="lowSymbol" placeholder="Enter token symbol" required>
+            </div>
+            <div class="action-row">
+                <span>Deploy Low Meme Coin</span>
+                <button id="deployLowButton" onclick="deployMemeCoin(false)" disabled>Deploy</button>
+            </div>
+            <div class="action-row">
+                <span>Add Liquidity (Low)</span>
+                <button id="addLiquidityLowButton" onclick="addLiquidity(false)" disabled>Add</button>
+            </div>
+            <div class="action-row">
+                <span>Claim Fees (Low)</span>
+                <button id="claimFeesLowButton" onclick="claimFees(false)" disabled>Claim</button>
+            </div>
+        </div>
+        <div class="action-box">
+            <div class="input-group">
+                <label for="highName">High Meme Coin Name (10,000 BONE) *</label>
+                <input type="text" id="highName" placeholder="Enter token name" required>
+            </div>
+            <div class="input-group">
+                <label for="highSymbol">High Meme Coin Symbol *</label>
+                <input type="text" id="highSymbol" placeholder="Enter token symbol" required>
+            </div>
+            <div class="action-row">
+                <span>Deploy High Meme Coin</span>
+                <button id="deployHighButton" onclick="deployMemeCoin(true)" disabled>Deploy</button>
+            </div>
+            <div class="action-row">
+                <span>Add Liquidity (High)</span>
+                <button id="addLiquidityHighButton" onclick="addLiquidity(true)" disabled>Add</button>
+            </div>
+            <div class="action-row">
+                <span>Claim Fees (High)</span>
+                <button id="claimFeesHighButton" onclick="claimFees(true)" disabled>Claim</button>
+            </div>
+        </div>
+        <div class="info-box" id="userInfoBox">
+            <div class="info-row">
+                <span>Low Meme Coin:</span>
+                <div class="address-container">
+                    <span id="lowMemeCoinAddress" class="short-address">Not deployed</span>
+                    <button id="copyLowMemeCoinButton" class="copy-button" onclick="copyToClipboard('lowMemeCoinAddress')" disabled>Copy</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span>Low Pair:</span>
+                <div class="address-container">
+                    <span id="lowPairAddress" class="short-address">Not created</span>
+                    <button id="copyLowPairButton" class="copy-button" onclick="copyToClipboard('lowPairAddress')" disabled>Copy</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span>Low Liquidity:</span>
+                <span id="lowLiquidityStatus">Not added</span>
+            </div>
+            <div class="info-row">
+                <span>Low Claimable Fees:</span>
+                <div class="address-container">
+                    <span id="lowFees" class="short-address">0 / 0</span>
+                    <button id="copyLowFeesButton" class="copy-button" onclick="copyToClipboard('lowFees')" disabled>Copy</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span>High Meme Coin:</span>
+                <div class="address-container">
+                    <span id="highMemeCoinAddress" class="short-address">Not deployed</span>
+                    <button id="copyHighMemeCoinButton" class="copy-button" onclick="copyToClipboard('highMemeCoinAddress')" disabled>Copy</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span>High Pair:</span>
+                <div class="address-container">
+                    <span id="highPairAddress" class="short-address">Not created</span>
+                    <button id="copyHighPairButton" class="copy-button" onclick="copyToClipboard('highPairAddress')" disabled>Copy</button>
+                </div>
+            </div>
+            <div class="info-row">
+                <span>High Liquidity:</span>
+                <span id="highLiquidityStatus">Not added</span>
+            </div>
+            <div class="info-row">
+                <span>High Claimable Fees:</span>
+                <div class="address-container">
+                    <span id="highFees" class="short-address">0 / 0</span>
+                    <button id="copyHighFeesButton" class="copy-button" onclick="copyToClipboard('highFees')" disabled>Copy</button>
+                </div>
+            </div>
+        </div>
+        <div class="luisa-section">
+            <img src="/meme/images/luisalogo.png" alt="Luisa">
+            <div class="luisa-message" id="luisaMessage">"Hey there! Connect your wallet to deploy meme coins with me, Luisa!"</div>
+        </div>
+        <div class="footer">
+            All rights reserved by Luisa © 2025
+            <a href="https://x.com/luisaiagent" target="_blank">
+                <span class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </span>
+            </a>
+            <a href="https://t.me/luisaiagent" target="_blank">
+                <span class="social-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9.417 15.181l-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.013.564 1.727.267 2.039-.592l3.638-17.032c.319-1.491-.594-2.074-1.609-1.712l-21.54 8.317c-1.491.564-1.491 1.491 0 1.955l5.518 1.712 12.846-8.117c.892-.564-.297-1.128-1.109 0z"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+        <div class="hint">
+            Note: You must input token name and symbol to deploy. One Low (1,000 BONE) and one High (10,000 BONE) per user!
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        const shibarium = {
+            chainId: 109,
+            chainName: 'Shibarium',
+            nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 },
+            rpcUrls: ['https://rpc.shibrpc.com'],
+            blockExplorerUrls: ['https://shibariumscan.io']
+        };
+        const luisaSwapAddress = "0x3A6f853C557D6f7CB3147463aC99789fA9c04A8B";
+        const luisaSwapAbi = [
+            {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount0","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount1","type":"uint256"},{"indexed":false,"internalType":"bool","name":"isHigh","type":"bool"}],"name":"FeesClaimed","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"pair","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"bool","name":"isHigh","type":"bool"}],"name":"LiquidityAdded","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"memeCoin","type":"address"},{"indexed":false,"internalType":"string","name":"name","type":"string"},{"indexed":false,"internalType":"string","name":"symbol","type":"string"},{"indexed":false,"internalType":"bool","name":"isHigh","type":"bool"}],"name":"MemeCoinDeployed","type":"event"},
+            {"inputs":[{"internalType":"bool","name":"isHigh","type":"bool"}],"name":"addLiquidity","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"bool","name":"isHigh","type":"bool"}],"name":"claimFees","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"depositWBONE","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"string","name":"_name","type":"string"},{"internalType":"string","name":"_symbol","type":"string"},{"internalType":"bool","name":"isHigh","type":"bool"}],"name":"deployMemeCoin","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserInfo","outputs":[{"internalType":"address","name":"lowMemeCoin","type":"address"},{"internalType":"address","name":"highMemeCoin","type":"address"},{"internalType":"address","name":"lowPair","type":"address"},{"internalType":"address","name":"highPair","type":"address"},{"internalType":"uint256","name":"lowLiquidity","type":"uint256"},{"internalType":"uint256","name":"highLiquidity","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"isMemeCoin","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userInfo","outputs":[{"internalType":"address","name":"lowMemeCoin","type":"address"},{"internalType":"address","name":"highMemeCoin","type":"address"},{"internalType":"address","name":"lowPair","type":"address"},{"internalType":"address","name":"highPair","type":"address"},{"internalType":"uint256","name":"lowLiquidity","type":"uint256"},{"internalType":"uint256","name":"highLiquidity","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        let web3, account, luisaSwapContract;
+
+        const luisaMessages = {
+            connectStart: ["Ooh, let’s dive in! Connecting to Shibarium—hold my hand, sweetie!","Hey, darling! Unlocking your wallet for some Shib fun!","Excited? I’m linking us to Shibarium—stay with me!","Oh, let’s sparkle! Connecting your wallet now, love!"],
+            connectSuccess: ["Yay! We’re in, gorgeous! Time to shine on Shibarium!","Wow, connected, darling! Ready to deploy meme coins!","Splendid! Wallet’s linked—let’s create some fun!","Fantastic, sweetie! We’re set to explore Shibarium together!"],
+            connectFail: ["Oh no, darling! Wallet slipped away—try again, please!","Oopsie! No wallet vibe—let’s retry, my dear!","Hmm, a glitch! Let’s reconnect with a smile, love!","Yikes! Wallet’s shy—give it another go, sweetie!"],
+            deployStart: ["Ooh, deploying your meme coin—let’s make it sparkle!","Hey, love! Creating your coin—hold on tight!","Excited? I’m crafting your meme coin now, sweetie!","Let’s shine! Deploying your coin, darling!"],
+            deploySuccess: (symbol) => [`Yay! ${symbol} is live—ready to glow, darling?`,`Ooh, ${symbol} deployed! Let’s sparkle, love!`,`Splendid! ${symbol} is yours—time to shine, sweetie!`,`Wow, ${symbol} is here! You’re dazzling, dear!`],
+            deployFail: ["Oh no, darling! Deployment failed—try again, please!","Oopsie! Coin creation slipped—retry, love!","Hmm, a hiccup! Let’s deploy again, sweetie!","Yikes! Deployment didn’t work—let’s retry, dear!"],
+            liquidityStart: ["Ooh, adding liquidity—let’s make it flow, darling!","Hey, love! Pooling your tokens—stay with me!","Excited? I’m setting up liquidity, sweetie!","Let’s shine! Adding liquidity now, my dear!"],
+            liquiditySuccess: ["Yay! Liquidity added—you’re a Shibarium star, darling!","Ooh, pool’s ready! Let’s sparkle, love!","Splendid! Liquidity set—time to trade, sweetie!","Wow, liquidity added! You’re amazing, dear!"],
+            liquidityFail: ["Oh no, darling! Liquidity failed—try again, please!","Oopsie! Pooling didn’t work—retry, love!","Hmm, a glitch! Let’s add liquidity again, sweetie!","Yikes! Liquidity slipped—let’s retry, dear!"],
+            claimStart: ["Ooh, claiming your fees—let’s fetch them, darling!","Hey, love! Grabbing your fees—hold on!","Excited? I’m claiming your fees, sweetie!","Let’s shine! Fetching your fees now, dear!"],
+            claimSuccess: ["Yay! Fees claimed—you’re a Shibarium diva, darling!","Ooh, fees collected! Let’s sparkle, love!","Splendid! Fees are yours—enjoy, sweetie!","Wow, fees claimed! You’re amazing, dear!"],
+            claimFail: ["Oh no, darling! Claim failed—try again, please!","Oopsie! Fees slipped—retry, love!","Hmm, a hiccup! Let’s claim again, sweetie!","Yikes! Claim didn’t work—let’s retry, dear!"]
+        };
+
+        function getRandomMessage(type, param1) {
+            const messages = luisaMessages[type];
+            if (typeof messages === 'function') {
+                const options = messages(param1);
+                return options[Math.floor(Math.random() * options.length)];
+            }
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function shortenAddress(address) {
+            if (!address || address === '0x0000000000000000000000000000000000000000') return 'N/A';
+            return `${address.slice(0, 6)}...${address.slice(-4)}`;
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).getAttribute('data-full-address') || document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!')).catch(err => console.error('Failed to copy:', err));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('connectWalletButton').addEventListener('click', connectWallet);
+            setupWalletListeners();
+            updateDeployButtonState();
+            document.getElementById('lowName').addEventListener('input', updateDeployButtonState);
+            document.getElementById('lowSymbol').addEventListener('input', updateDeployButtonState);
+            document.getElementById('highName').addEventListener('input', updateDeployButtonState);
+            document.getElementById('highSymbol').addEventListener('input', updateDeployButtonState);
+        });
+
+        async function connectWallet() {
+            const status = document.getElementById('networkStatus');
+            const connectButton = document.getElementById('connectWalletButton');
+            const luisaMessage = document.getElementById('luisaMessage');
+            try {
+                if (!window.ethereum) throw new Error("No wallet detected. Please install MetaMask or another wallet.");
+                connectButton.disabled = true;
+                status.innerText = "Connecting...";
+                luisaMessage.innerText = getRandomMessage('connectStart');
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (!accounts.length) throw new Error("No accounts found. Please unlock your wallet.");
+                account = accounts[0];
+                await switchToShibarium();
+                luisaSwapContract = new web3.eth.Contract(luisaSwapAbi, luisaSwapAddress);
+                const chainId = await web3.eth.getChainId();
+                if (Number(chainId) !== 109) throw new Error("Failed to switch to Shibarium.");
+                updateUIAfterConnect();
+                await updateUserInfo();
+            } catch (error) {
+                console.error("Connection failed:", error);
+                status.innerText = "Failed: " + error.message;
+                luisaMessage.innerText = getRandomMessage('connectFail');
+                resetUI();
+            } finally {
+                connectButton.disabled = false;
+            }
+        }
+
+        async function switchToShibarium() {
+            try {
+                const chainId = await web3.eth.getChainId();
+                if (Number(chainId) !== 109) {
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: "0x6d" }] }).catch(async (switchError) => {
+                        if (switchError.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibarium] });
+                        else throw switchError;
+                    });
+                }
+            } catch (error) {
+                throw new Error("Network switch failed: " + error.message);
+            }
+        }
+
+        function updateUIAfterConnect() {
+            document.getElementById('connectWalletButton').textContent = `Connected: ${account.slice(0, 6)}...${account.slice(-4)}`;
+            document.getElementById('networkStatus').innerText = "Connected to Shibarium";
+            document.getElementById('luisaMessage').innerText = getRandomMessage('connectSuccess');
+            updateDeployButtonState();
+        }
+
+        function resetUI() {
+            document.getElementById('connectWalletButton').textContent = "Connect Wallet";
+            document.getElementById('networkStatus').innerText = "Click to connect...";
+            document.getElementById('deployLowButton').disabled = true;
+            document.getElementById('deployHighButton').disabled = true;
+            document.getElementById('addLiquidityLowButton').disabled = true;
+            document.getElementById('addLiquidityHighButton').disabled = true;
+            document.getElementById('claimFeesLowButton').disabled = true;
+            document.getElementById('claimFeesHighButton').disabled = true;
+            document.getElementById('lowMemeCoinAddress').textContent = 'Not deployed';
+            document.getElementById('highMemeCoinAddress').textContent = 'Not deployed';
+            document.getElementById('lowPairAddress').textContent = 'Not created';
+            document.getElementById('highPairAddress').textContent = 'Not created';
+            document.getElementById('lowLiquidityStatus').textContent = 'Not added';
+            document.getElementById('highLiquidityStatus').textContent = 'Not added';
+            document.getElementById('lowFees').textContent = '0 / 0';
+            document.getElementById('highFees').textContent = '0 / 0';
+            document.getElementById('copyLowMemeCoinButton').disabled = true;
+            document.getElementById('copyHighMemeCoinButton').disabled = true;
+            document.getElementById('copyLowPairButton').disabled = true;
+            document.getElementById('copyHighPairButton').disabled = true;
+            document.getElementById('copyLowFeesButton').disabled = true;
+            document.getElementById('copyHighFeesButton').disabled = true;
+        }
+
+        function setupWalletListeners() {
+            if (!window.ethereum) return;
+            window.ethereum.on('accountsChanged', async (newAccounts) => {
+                if (newAccounts.length) {
+                    account = newAccounts[0];
+                    if (web3) {
+                        await switchToShibarium();
+                        luisaSwapContract = new web3.eth.Contract(luisaSwapAbi, luisaSwapAddress);
+                        updateUIAfterConnect();
+                        await updateUserInfo();
+                    } else {
+                        await connectWallet();
+                    }
+                } else {
+                    web3 = null;
+                    account = null;
+                    luisaSwapContract = null;
+                    resetUI();
+                    document.getElementById('luisaMessage').innerText = getRandomMessage('connectFail');
+                }
+            });
+            window.ethereum.on('chainChanged', async (chainId) => {
+                if (parseInt(chainId, 16) !== 109) {
+                    web3 = null;
+                    account = null;
+                    luisaSwapContract = null;
+                    resetUI();
+                    document.getElementById('networkStatus').innerText = "Wrong network. Reconnect to Shibarium.";
+                    document.getElementById('luisaMessage').innerText = "Ooh, wrong chain, darling! Switch to Shibarium!";
+                } else if (account) {
+                    await connectWallet();
+                }
+            });
+        }
+
+        function updateDeployButtonState() {
+            const lowName = document.getElementById('lowName').value.trim();
+            const lowSymbol = document.getElementById('lowSymbol').value.trim();
+            const highName = document.getElementById('highName').value.trim();
+            const highSymbol = document.getElementById('highSymbol').value.trim();
+            document.getElementById('deployLowButton').disabled = !web3 || !account || !lowName || !lowSymbol;
+            document.getElementById('deployHighButton').disabled = !web3 || !account || !highName || !highSymbol;
+        }
+
+        async function updateUserInfo() {
+            if (!web3 || !account || !luisaSwapContract) {
+                resetUI();
+                return;
+            }
+            try {
+                const userInfo = await luisaSwapContract.methods.getUserInfo(account).call();
+                document.getElementById('lowMemeCoinAddress').textContent = userInfo.lowMemeCoin === '0x0000000000000000000000000000000000000000' ? 'Not deployed' : shortenAddress(userInfo.lowMemeCoin);
+                document.getElementById('lowMemeCoinAddress').setAttribute('data-full-address', userInfo.lowMemeCoin);
+                document.getElementById('copyLowMemeCoinButton').disabled = userInfo.lowMemeCoin === '0x0000000000000000000000000000000000000000';
+                document.getElementById('deployLowButton').disabled = userInfo.lowMemeCoin !== '0x0000000000000000000000000000000000000000' || !document.getElementById('lowName').value.trim() || !document.getElementById('lowSymbol').value.trim();
+                document.getElementById('highMemeCoinAddress').textContent = userInfo.highMemeCoin === '0x0000000000000000000000000000000000000000' ? 'Not deployed' : shortenAddress(userInfo.highMemeCoin);
+                document.getElementById('highMemeCoinAddress').setAttribute('data-full-address', userInfo.highMemeCoin);
+                document.getElementById('copyHighMemeCoinButton').disabled = userInfo.highMemeCoin === '0x0000000000000000000000000000000000000000';
+                document.getElementById('deployHighButton').disabled = userInfo.highMemeCoin !== '0x0000000000000000000000000000000000000000' || !document.getElementById('highName').value.trim() || !document.getElementById('highSymbol').value.trim();
+                document.getElementById('lowPairAddress').textContent = userInfo.lowPair === '0x0000000000000000000000000000000000000000' ? 'Not created' : shortenAddress(userInfo.lowPair);
+                document.getElementById('lowPairAddress').setAttribute('data-full-address', userInfo.lowPair);
+                document.getElementById('copyLowPairButton').disabled = userInfo.lowPair === '0x0000000000000000000000000000000000000000';
+                document.getElementById('highPairAddress').textContent = userInfo.highPair === '0x0000000000000000000000000000000000000000' ? 'Not created' : shortenAddress(userInfo.highPair);
+                document.getElementById('highPairAddress').setAttribute('data-full-address', userInfo.highPair);
+                document.getElementById('copyHighPairButton').disabled = userInfo.highPair === '0x0000000000000000000000000000000000000000';
+                document.getElementById('lowLiquidityStatus').textContent = userInfo.lowLiquidity > 0 ? 'Added' : 'Not added';
+                document.getElementById('highLiquidityStatus').textContent = userInfo.highLiquidity > 0 ? 'Added' : 'Not added';
+                document.getElementById('addLiquidityLowButton').disabled = userInfo.lowMemeCoin === '0x0000000000000000000000000000000000000000' || userInfo.lowLiquidity > 0;
+                document.getElementById('addLiquidityHighButton').disabled = userInfo.highMemeCoin === '0x0000000000000000000000000000000000000000' || userInfo.highLiquidity > 0;
+                document.getElementById('claimFeesLowButton').disabled = userInfo.lowPair === '0x0000000000000000000000000000000000000000';
+                document.getElementById('claimFeesHighButton').disabled = userInfo.highPair === '0x0000000000000000000000000000000000000000';
+                document.getElementById('lowFees').textContent = userInfo.lowPair === '0x0000000000000000000000000000000000000000' ? '0 / 0' : 'Check pair';
+                document.getElementById('lowFees').setAttribute('data-full-address', 'Check pair');
+                document.getElementById('copyLowFeesButton').disabled = userInfo.lowPair === '0x0000000000000000000000000000000000000000';
+                document.getElementById('highFees').textContent = userInfo.highPair === '0x0000000000000000000000000000000000000000' ? '0 / 0' : 'Check pair';
+                document.getElementById('highFees').setAttribute('data-full-address', 'Check pair');
+                document.getElementById('copyHighFeesButton').disabled = userInfo.highPair === '0x0000000000000000000000000000000000000000';
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+                document.getElementById('networkStatus').innerText = "Error fetching user info: " + error.message;
+            }
+        }
+
+        async function deployMemeCoin(isHigh) {
+            if (!web3 || !account || !luisaSwapContract) {
+                document.getElementById('networkStatus').innerText = "Please connect wallet.";
+                return;
+            }
+            const status = document.getElementById('networkStatus');
+            const luisaMessage = document.getElementById('luisaMessage');
+            const deployButton = isHigh ? document.getElementById('deployHighButton') : document.getElementById('deployLowButton');
+            const nameInput = isHigh ? document.getElementById('highName') : document.getElementById('lowName');
+            const symbolInput = isHigh ? document.getElementById('highSymbol') : document.getElementById('lowSymbol');
+            const name = nameInput.value.trim();
+            const symbol = symbolInput.value.trim();
+            if (!name || !symbol) {
+                status.innerText = "Please enter both name and symbol.";
+                luisaMessage.innerText = "Oopsie, darling! Fill in the blanks!";
+                return;
+            }
+            try {
+                deployButton.disabled = true;
+                status.innerText = "Deploying...";
+                luisaMessage.innerText = getRandomMessage('deployStart');
+                await luisaSwapContract.methods.deployMemeCoin(name, symbol, isHigh).send({ from: account });
+                status.innerText = "Meme coin deployed!";
+                luisaMessage.innerText = getRandomMessage('deploySuccess', symbol);
+                nameInput.disabled = true;
+                symbolInput.disabled = true;
+                await updateUserInfo();
+            } catch (error) {
+                console.error("Deploy failed:", error);
+                status.innerText = "Deploy failed: " + (error.message || "Unknown error");
+                luisaMessage.innerText = getRandomMessage('deployFail');
+                deployButton.disabled = false;
+            }
+        }
+
+        async function addLiquidity(isHigh) {
+            if (!web3 || !account || !luisaSwapContract) {
+                document.getElementById('networkStatus').innerText = "Please connect wallet.";
+                return;
+            }
+            const status = document.getElementById('networkStatus');
+            const luisaMessage = document.getElementById('luisaMessage');
+            const addLiquidityButton = isHigh ? document.getElementById('addLiquidityHighButton') : document.getElementById('addLiquidityLowButton');
+            try {
+                addLiquidityButton.disabled = true;
+                status.innerText = "Adding liquidity...";
+                luisaMessage.innerText = getRandomMessage('liquidityStart');
+                await luisaSwapContract.methods.addLiquidity(isHigh).send({ from: account });
+                status.innerText = "Liquidity added!";
+                luisaMessage.innerText = getRandomMessage('liquiditySuccess');
+                await updateUserInfo();
+            } catch (error) {
+                console.error("Add liquidity failed:", error);
+                status.innerText = "Add liquidity failed: " + (error.message || "Unknown error");
+                luisaMessage.innerText = getRandomMessage('liquidityFail');
+                addLiquidityButton.disabled = false;
+            }
+        }
+
+        async function claimFees(isHigh) {
+            if (!web3 || !account || !luisaSwapContract) {
+                document.getElementById('networkStatus').innerText = "Please connect wallet.";
+                return;
+            }
+            const status = document.getElementById('networkStatus');
+            const luisaMessage = document.getElementById('luisaMessage');
+            const claimFeesButton = isHigh ? document.getElementById('claimFeesHighButton') : document.getElementById('claimFeesLowButton');
+            try {
+                claimFeesButton.disabled = true;
+                status.innerText = "Claiming fees...";
+                luisaMessage.innerText = getRandomMessage('claimStart');
+                await luisaSwapContract.methods.claimFees(isHigh).send({ from: account });
+                status.innerText = "Fees claimed!";
+                luisaMessage.innerText = getRandomMessage('claimSuccess');
+                await updateUserInfo();
+            } catch (error) {
+                console.error("Claim fees failed:", error);
+                status.innerText = "Claim fees failed: " + (error.message || "Unknown error");
+                luisaMessage.innerText = getRandomMessage('claimFail');
+                claimFeesButton.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
